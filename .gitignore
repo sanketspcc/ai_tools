@@ -1,0 +1,16 @@
+data/
+__pycache__/
+.streamlit/
+
+#ignore video files
+.mp4
+.avi
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
