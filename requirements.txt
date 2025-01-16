@@ -1,6 +1,6 @@
 streamlit == 1.40.1
 moviepy == 1.0.3
-opencv-python == 4.9.0.80
+opencv-python-headless
 regex == 2024.4.28
 pymupdf == 1.25.1
 streamlit-sortables == 0.3.1
