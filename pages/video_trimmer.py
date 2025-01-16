@@ -17,7 +17,7 @@ st.markdown("---")
 if "trimmed_videos" not in st.session_state:
     st.session_state["trimmed_videos"] = []
 
-tab1, tab2, tab3 = st.tabs(["📂 Upload", "✂ Trim", "📥 Download"])
+tab1, tab2 = st.tabs(["📂 Upload", "✂ Trim"])
 
 with tab1:
     st.subheader("📤 Upload Your Video")
