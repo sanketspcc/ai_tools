@@ -22,11 +22,14 @@ tab1, tab2 = st.tabs(["📂 Upload", "✂ Trim"])
 with tab1:
     st.subheader("📤 Upload Your Video")
     uploaded_video = st.file_uploader("Upload (MP4, AVI)", type=['mp4', 'avi'])
+    
 
 if uploaded_video:
     with tempfile.NamedTemporaryFile(delete=False, suffix=".mp4") as temp_video:
         temp_video.write(uploaded_video.read())
         temp_video_path = temp_video.name
+        file_name = uploaded_video.name
+        file_name = os.path.splitext(file_name)[0]
 
     # fetch video duration
     cap = cv2.VideoCapture(temp_video_path)
@@ -95,6 +98,6 @@ if uploaded_video:
                         st.download_button(
                             label=f"📥 Download Clip {idx+1}",
                             data=file,
-                            file_name=f"trimmed_clip_{idx+1}.mp4",
+                            file_name=f"{file_name}_clip_{idx+1}.mp4",
                             mime="video/mp4"
                         )
