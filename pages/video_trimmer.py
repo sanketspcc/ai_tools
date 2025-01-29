@@ -5,7 +5,7 @@ import tempfile
 import cv2
 import os
 
-# video trimming
+# Video trimming function
 def trim_video(input_path, output_path, start_time, end_time):
     ffmpeg_extract_subclip(input_path, start_time, end_time, targetname=output_path)
 
@@ -21,34 +21,38 @@ tab1, tab2 = st.tabs(["📂 Upload", "✂ Trim"])
 
 with tab1:
     st.subheader("📤 Upload Your Video")
-    uploaded_video = st.file_uploader("Upload (MP4, AVI)", type=['mp4', 'avi'])
-    
+    uploaded_video = st.file_uploader("Upload (MP4, AVI, MOV, MKV, FLV)", type=['mp4', 'avi', 'mov', 'mkv', 'flv'])
 
 if uploaded_video:
-    with tempfile.NamedTemporaryFile(delete=False, suffix=".mp4") as temp_video:
+    # Preserve original file extension
+    file_extension = os.path.splitext(uploaded_video.name)[1]
+    
+    with tempfile.NamedTemporaryFile(delete=False, suffix=file_extension) as temp_video:
         temp_video.write(uploaded_video.read())
         temp_video_path = temp_video.name
-        file_name = uploaded_video.name
-        file_name = os.path.splitext(file_name)[0]
+        file_name = os.path.splitext(uploaded_video.name)[0]
 
-    # fetch video duration
+    # Fetch video duration
     cap = cv2.VideoCapture(temp_video_path)
     fps = cap.get(cv2.CAP_PROP_FPS)
     total_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
-    duration = total_frames / fps
+    duration = total_frames / fps if fps > 0 else 0
     cap.release()
 
     with tab2:
         st.subheader("🎬 Trim Video Clips")
 
         col1, col2 = st.columns([1.5, 2])
-        
+
         with col1:  # Video Preview
             st.video(temp_video_path)
 
         with col2:  # Trimming Inputs
             num_clips = st.slider("🎬 Number of Clips", min_value=1, max_value=10, value=3)
-            
+
+            # Custom filename input
+            custom_filename = st.text_input("📄 Enter custom filename (optional)", value=file_name)
+
             clip_times = []
             for i in range(num_clips):
                 col_start, col_end = st.columns(2)
@@ -58,7 +62,7 @@ if uploaded_video:
                 with col_end:
                     end_time_str = st.text_input(f"🎬 Clip {i+1} End (MM:SS)", "00:05", key=f"end_{i}")
 
-                # Validation of the timing format 
+                # Validation of the timing format
                 start_match = re.match(r'(\d{2}):(\d{2})', start_time_str)
                 end_match = re.match(r'(\d{2}):(\d{2})', end_time_str)
 
@@ -79,9 +83,9 @@ if uploaded_video:
             if st.button("🎬 Generate Clips"):
                 st.session_state["trimmed_videos"] = []
                 progress_bar = st.progress(0)
-                
+
                 for idx, (start, end) in enumerate(clip_times):
-                    output_clip_path = os.path.join(tempfile.gettempdir(), f"trimmed_clip_{idx+1}.mp4")
+                    output_clip_path = os.path.join(tempfile.gettempdir(), f"trimmed_clip_{idx+1}{file_extension}")
                     trim_video(temp_video_path, output_clip_path, start, end)
                     st.session_state["trimmed_videos"].append(output_clip_path)
                     progress_bar.progress((idx + 1) / len(clip_times))
@@ -98,6 +102,6 @@ if uploaded_video:
                         st.download_button(
                             label=f"📥 Download Clip {idx+1}",
                             data=file,
-                            file_name=f"{file_name}_clip_{idx+1}.mp4",
-                            mime="video/mp4"
+                            file_name=f"{custom_filename or file_name}_clip_{idx+1}{file_extension}",
+                            mime=f"video/{file_extension.lstrip('.')}"
                         )

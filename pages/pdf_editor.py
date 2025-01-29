@@ -7,8 +7,16 @@ from streamlit_sortables import sort_items
 st.set_page_config(page_title="PDF Editor", layout="wide")
 st.title("📄 Interactive PDF Editor")
 
-# Function to delete pages based on user input
-def get_remaining_pages(images):
+# Function to merge uploaded PDFs
+def merge_pdfs(uploaded_files):
+    merged_pdf = fitz.open()
+    for uploaded_file in uploaded_files:
+        with fitz.open(stream=uploaded_file.read(), filetype="pdf") as pdf:
+            merged_pdf.insert_pdf(pdf)
+    return merged_pdf
+
+# Function to delete selected pages
+def delete_pages(images):
     delete_flags = [False] * len(images)
     cols_per_row = 4
     cols = st.columns(cols_per_row)
@@ -19,53 +27,46 @@ def get_remaining_pages(images):
             delete_flags[i] = True
     return [i for i in range(len(images)) if not delete_flags[i]]
 
-# Function to reorder pages based on user input
+# Function to reorder pages
 def reorder_pages(remaining_pages):
     st.subheader("🔄 Reorder Pages")
-    reordered_indices = sort_items([f"Page {i + 1}" for i in remaining_pages])
-    reordered_indices = [int(item.split(" ")[1]) - 1 for item in reordered_indices]
-    return [remaining_pages[i] for i in reordered_indices if i < len(remaining_pages)]
+    page_labels = [f"Page {i + 1}" for i in remaining_pages]
+    reordered_items = sort_items(page_labels)
+    reordered_indices = [remaining_pages[page_labels.index(item)] for item in reordered_items]
+    return reordered_indices
 
-# Upload multiple PDFs
+# Function to create new PDF with updated pages
+def create_updated_pdf(pdf, page_order):
+    updated_pdf = fitz.open()
+    for i in page_order:
+        updated_pdf.insert_pdf(pdf, from_page=i, to_page=i)
+    return updated_pdf
+
+# Main function to handle PDF state
 uploaded_files = st.file_uploader("Upload PDFs to merge and edit", type=["pdf"], accept_multiple_files=True)
 
 if uploaded_files:
-    merged_pdf = fitz.open()
+    pdf = merge_pdfs(uploaded_files)
+    images = [Image.open(io.BytesIO(page.get_pixmap().tobytes("png"))) for page in pdf]
 
-    # Merge uploaded PDFs
-    for uploaded_file in uploaded_files:
-        with fitz.open(stream=uploaded_file.read(), filetype="pdf") as pdf:
-            merged_pdf.insert_pdf(pdf)
-
-    # Convert PDF pages to images for preview
-    images = []
-    for page in merged_pdf:
-        pix = page.get_pixmap()
-        img = Image.open(io.BytesIO(pix.tobytes("png")))
-        images.append(img)
-
-    # Delete and reorder pages
     st.subheader("📌 Pages Preview and Management")
-    remaining_pages = get_remaining_pages(images)
-
+    remaining_pages = delete_pages(images)
+    
     if not remaining_pages:
         st.warning("No pages remain after deletion. Please select fewer pages to delete.")
     else:
         new_order = reorder_pages(remaining_pages)
 
         if st.button("✅ Apply Changes & Download PDF"):
-            edited_pdf = fitz.open()
-            for i in new_order:
-                edited_pdf.insert_pdf(merged_pdf, from_page=i, to_page=i)
+            edited_pdf = create_updated_pdf(pdf, new_order)
 
             original_file_name = uploaded_files[0].name
-            original_base_name = original_file_name.rsplit(".", 1)[0]
-            output_file_name = f"modified_{original_base_name}.pdf"
-
+            output_file_name = f"modified_{original_file_name.rsplit('.', 1)[0]}.pdf"
+            
             edited_pdf.save(output_file_name)
             edited_pdf.close()
 
             with open(output_file_name, "rb") as f:
                 st.download_button(
-                    "📥 Download Modified PDF", f, file_name=output_file_name, mime="application/pdf"
+                    "📅 Download Modified PDF", f, file_name=output_file_name, mime="application/pdf"
                 )
