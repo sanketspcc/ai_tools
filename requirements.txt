@@ -4,3 +4,4 @@ opencv-python-headless
 regex == 2024.4.28
 pymupdf == 1.25.1
 streamlit-sortables == 0.3.1
+streamlit-drawable-canvas == 0.9.3
