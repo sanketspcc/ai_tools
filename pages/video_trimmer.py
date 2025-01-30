@@ -10,7 +10,7 @@ def trim_video(input_path, output_path, start_time, end_time):
     ffmpeg_extract_subclip(input_path, start_time, end_time, targetname=output_path)
 
 # Page Layout
-st.set_page_config(page_title="Video Trimmer", layout="wide")
+st.set_page_config(page_title="Video Trimmer", layout="wide",initial_sidebar_state="collapsed")
 st.title("🎥 Video Trimmer")
 st.markdown("---")
 

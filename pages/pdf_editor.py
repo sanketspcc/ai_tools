@@ -4,7 +4,8 @@ from PIL import Image
 import io
 from streamlit_sortables import sort_items
 
-st.set_page_config(page_title="PDF Editor", layout="wide")
+st.set_page_config(page_title="PDF Editor", layout="wide",initial_sidebar_state="collapsed")
+
 st.title("📄 Interactive PDF Editor")
 
 # Function to merge uploaded PDFs
