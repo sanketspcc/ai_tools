@@ -5,7 +5,7 @@ __pycache__/
 #ignore video files
 .mp4
 .avi
-
+.pdf
 # Environments
 .env
 .venv
