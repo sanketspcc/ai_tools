@@ -2551,7 +2551,6 @@ def generate_report(assessment_id):
 
 
 
-    print(batter_name, document['drill_metrics']['top_hand']['drill_qr_path'],f"tophand_qr.jpg")
     input_dict = { 
 
 
