@@ -2567,14 +2567,14 @@ def generate_report(assessment_id):
         'hold_your_pose': hold_your_pose_flag,
         'feetplanted': feetplanted_flag,
 
-        'tophand_qr': google_drive_url_to_image( document['drill_metrics']['top_hand']['drill_qr_path'],f"tophand_qr.jpg"), # Still include extension for safety,
-        'bottomhand_qr': google_drive_url_to_image( document['drill_metrics']['bottom_hand']['drill_qr_path'],"bottomhand_qr.jpg"),
-        'backfoot_drive_qr': google_drive_url_to_image( document['drill_metrics']['backfoot']['drill_qr_path'],"backfoot_drive_qr.jpg"),
-        'backfoot_defense_qr': google_drive_url_to_image( document['drill_metrics']['backfoot']['drill_qr_path2'],"backfoot_defence.jpg"),
-        'running_bw_qr': google_drive_url_to_image( document['drill_metrics']['running_bw_wickets']['drill_qr_path'],"running_bw_qr.jpg"),
-        'feet_planted_qr': google_drive_url_to_image( document['drill_metrics']['feet_planted']['drill_qr_path'],"feet_planted_qr.jpg"),
+        'tophand_qr': google_drive_url_to_image( document['drill_metrics']['top_hand']['drill_qr_path'],f"tophand_qr.jpg") if tophand_flag else None , # Still include extension for safety,
+        'bottomhand_qr': google_drive_url_to_image( document['drill_metrics']['bottom_hand']['drill_qr_path'],"bottomhand_qr.jpg") if bottomhand_flag else None,
+        'backfoot_drive_qr': google_drive_url_to_image( document['drill_metrics']['backfoot']['drill_qr_path'],"backfoot_drive_qr.jpg") if backfootdrive_flag else None,
+        'backfoot_defense_qr': google_drive_url_to_image( document['drill_metrics']['backfoot']['drill_qr_path2'],"backfoot_defence.jpg") if backfootdefense_flag else None,
+        'running_bw_qr': google_drive_url_to_image( document['drill_metrics']['running_bw_wickets']['drill_qr_path'],"running_bw_qr.jpg") if running_bw_flag else None,
+        'feet_planted_qr': google_drive_url_to_image( document['drill_metrics']['feet_planted']['drill_qr_path'],"feet_planted_qr.jpg") if feetplanted_flag else None,
         'hold_your_pose_qr': google_drive_url_to_image( document['drill_metrics']['hold_your_pose']['drill_qr_path'],"hold_your_pose_qr.jpg") if hold_your_pose_flag else None,
-        'power_hitting_qr': google_drive_url_to_image( document['drill_metrics']['power_hitting']['drill_qr_path'],"power_hitting_qr.jpg"),
+        'power_hitting_qr': google_drive_url_to_image( document['drill_metrics']['power_hitting']['drill_qr_path'],"power_hitting_qr.jpg") if power_hitting_flag else None,
 
 
         # PLAYER DETAILS 
