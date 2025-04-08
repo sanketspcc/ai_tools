@@ -2582,7 +2582,7 @@ def generate_report(assessment_id):
         'player_age': document['player_details']['player_age'],
         'player_gender': document['player_details']['player_gender'],
         'academy_name': document['player_details']['academy_name'],
-        "assessment_date": document['drill_date'],
+        "assessment_date": document['player_details']['drill_date'],
         'month_of_assessment': "Mar 2025",
         'overall_rating': document['overall_rating'],
         'arm': document['player_details']['arm'],
