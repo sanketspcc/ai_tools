@@ -2346,7 +2346,7 @@ def generate_power_hitting_table(data):
     table = [
         ("Balls", "Launch angle", "Ball speed before", "Ball speed after", "Bat speed")
     ]
-    balls = metrics['launch_angles']
+    balls = len(metrics['launch_angles'])
     for i in range(balls):  # For Ball 1 to Ball 6
         row = (
             f"Ball {i+1}",
