@@ -86,10 +86,10 @@ with st.container():
                 except Exception as e:
                     st.error(f"⚠️ An error occurred: {str(e)}")
 
-st.markdown("---")
-st.markdown("""
-    <div style="text-align: center; color: #666;">
-        Need help? Contact support@battinganalysis.com | 
-        © 2024 Batting Performance Analytics
-    </div>
-    """, unsafe_allow_html=True)
+# st.markdown("---")
+# st.markdown("""
+#     <div style="text-align: center; color: #666;">
+#         Need help? Contact support@battinganalysis.com | 
+#         © 2024 Batting Performance Analytics
+#     </div>
+#     """, unsafe_allow_html=True)
