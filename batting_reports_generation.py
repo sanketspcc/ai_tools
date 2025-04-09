@@ -2050,7 +2050,7 @@ def generate_batting_drills_report(input_dict):
 
             # pdf.image(input_dict['hold_your_pose_1'], 33.88/28.33, 122.01/28.33, 286.75/28.33, 122.41/28.33)
             pdf.image(input_dict['hold_your_pose_1'], 33.88/28.33, 122.01/28.33, 130/28.33, 200/28.33)
-
+    
         #-------------------------------------------------------------------------------------------------
 
         if input_dict['hold_your_pose_2']:
